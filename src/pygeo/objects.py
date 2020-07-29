@@ -57,18 +57,32 @@ class Vector:
 
 
 class Ray:
-    """A ray."""
-
-    ...
+    """This class represents a ray"""
+    def __init__(self,origin_p,dir_r):
+        self.p0 = np.array(origin_p)
+        self.dir = np.array(dir_r)
+        
+    def __repr__(self):
+        return f"Ray origin ({self.p0.tolist()}) and  Ray direction({self.dir.tolist()})"
+        
+     
+    def __eq__(self,other):
+        if isinstance(other, Ray):
+            return np.array_equal(self.p0,other.p0) and np.array_equal(self.dir,other.dir)
+        return False 
 
 
 class Sphere:
-    """A sphere."""
-
-    ...
-
-
-class Triangle:
-    """A triangle."""
-
-    ...
+    """A Sphere class with centre and radius"""
+    def __init__(self,centre,radius):
+        self.cp = np.array(centre)
+        self.rp = np.array(radius)
+    
+    def __repr__(self):
+        return f"Sphere centre ({self.cp.tolist()}) and  Sphere radius({self.rp.tolist()})"
+        
+     
+    def __eq__(self,other):
+        if isinstance(other,Sphere):
+            return np.array_equal(self.cp,other.cp) and np.array_equal(self.rp,other.rp)
+        return False 
