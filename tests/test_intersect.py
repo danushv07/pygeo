@@ -1,80 +1,32 @@
-ffrom .objects import Ray, Sphere, Point, Vector, Triangle
-import numpy as np
+from pygeo.intersect import  (_intersect_ray_with_sphere,
+                              _intersect,
+                              _intersect_ray_with_triangle)
+from pygeo.objects import Ray, Sphere,Triangle, Point, Vector
 
 
+# intersect function
+def test_given_ray_sphere_return_one_point_():
+    assert(_intersect(Ray((0,0,0),(1,1,0)),Sphere((1,1,1),1)) == Point((1,1,0))) is True
 
-def _intersect_ray_with_sphere(a,b):
-    """ Function for intersection of Ray and Sphere"""
-    x = np.dot(a._direction,a._direction)
-    y = 2 * np.dot((a._direction),(a._origin - b._centre))
-    z = np.dot((a._origin - b._centre),(a._origin - b._centre)) - b._radius**2
-            
-    discr = y**2 - 4*x*z #check discriminant
-    if discr < 0.0:
-        return False
-    elif discr == 0.0: #only one intersection
-        t = -y / (2*x)
-        sp_cls = []
-        for e,f in zip(a._origin,a._direction):
-            sp_cls.append(e+t*f)
-        return Point(sp_cls) 
-    else: # two intersection points
-        t_1 = (-y + np.sqrt(discr))/ (2*x)
-        t_2 = (-y - np.sqrt(discr))/ (2*x)
-        
-        if(t_1 > 0):
-            if(t_2 >0):
-                sp_1_cls = []
-                sp_2_cls = []
-                for c,d in zip(a._origin,a._direction):
-                    sp_1_cls.append(c+t_1*d)
-                for i,j in zip(a._origin,a._direction):
-                    sp_2_cls.append(i+t_2*j)
-                return Point(sp_1_cls),Point(sp_2_cls)
-            else:
-                sp_1_cls = []
-                for c,d in zip(a._origin,a._direction):
-                    sp_1_cls.append(c+t_1*d)
-                return Point(sp_1_cls)
-        else:
-            sp_2_cls = []
-            for i,j in zip(a._origin,a._direction):
-                    sp_2_cls.append(i+t_2*j)
-            return Point(sp_2_cls)
+def test_given_ray_triangle_return_intersection_point():
+    assert(_intersect_ray_with_triangle(Ray((5,2,5), (0,0,-1)), Triangle(((0,0,0),(10,0,0),(5,10,0)))) == Point((0.4,0.2,5))) is True
 
-def _intersect_ray_with_triangle(x,y):
-    """Fucntion for ray triangle intersection(Möller-Trumbore algorithm)"""
-    edge1 = y.v1 - y.v0 #edge 1
-    edge2 = y.v2 - y.v0 #edge 2
-    determinant = np.dot(edge1,(np.cross(x._direction,edge2)))
-    f = 1/determinant
-    s = x._origin - y.v0
-    t = f * np.dot(edge2,(np.cross(s,edge1)))
-    
-    if determinant < (10**(-6)): #back facing triangle
-        return False
-    
-    elif math.fabs(determinant) < (10**(-6)): # Ray triangle parallel
-        return False
-    
-    else:
-        u = f * np.dot(s,(np.cross(x._direction,edge2)))
-        if(u < 0 or u > 1):
-            return False
-        else:
-            v = f * np.dot(x._direction,(np.cross(s,edge1)))
-            if(v<0 or (u+v) > 1):
-                return False
-            else:
-                return Point((u,v,t))
+def test_given_ray_vector_return_false():
+    assert(_intersect(Ray((2,0,1),(0,-1,0)), Vector((1,2,3))) is False) is True
 
-def _intersect(x,y):
-    """Function to select the appropriate intersection function"""
-    if (isinstance(x,Ray) and isinstance(y,Sphere)): 
-            return _intersect_ray_with_sphere(x,y)
-    elif (isinstance(x,Ray) and isinstance(y,Triangle)):
-            return _intersect_ray_with_triangle(x,y)
-    else:
-        return False
-    
- 
+# Ray_sphere_intersection
+def test_given_ray_sphere_same_origin_return_one_point_intersection():
+    assert (_intersect_ray_with_sphere(Ray((0,0,0),(0,-1,0)),Sphere((0,0,0),5)) == Point((0,-5,0))) is True
+
+def test_given_ray_sphere_no_intersection_return_false():
+    assert (_intersect_ray_with_sphere(Ray((0,0,0),(0,1,0)),Sphere((5,5,5),5)) is False) is True
+
+def test_given_ray_sphere_return_tangent_intersection():
+    assert (_intersect_ray_with_sphere(Ray((0,0,0),(1,1,0)),Sphere((1,1,1),1)) == Point((1,1,0))) is True
+
+# Ray_triangle_intersection
+def test_given_ray_triangle_no_intersection_return_false():
+    assert(_intersect_ray_with_triangle(Ray((0,0,0), (1,1,0)),Triangle(((1,0,0),(0,1,0),(0,0,1)))) is False) is True
+
+def test_given_ray_triangle_no_intersection_return_false():
+    assert(_intersect_ray_with_triangle(Ray((0,0,0), (1,1,0)), Triangle(((1,1,0),(3,1,0),(2,0,1)))) == Point((0,0,1))) is True    
