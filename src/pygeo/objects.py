@@ -86,3 +86,23 @@ class Sphere:
         if isinstance(other,Sphere):
             return np.array_equal(self.cp,other.cp) and np.array_equal(self.rp,other.rp)
         return False 
+
+class Triangle:
+    """ Triangle class with 3 vertices"""
+    def __init__(self,vertices):
+        self.v = np.array(vertices)
+        self.v0 = np.array(vertices[0])
+        self.v1 = np.array(vertices[1])
+        self.v2 = np.array(vertices[2])
+        
+    def __repr__(self):
+        return f"Traingle vertices({self.v.tolist()})"
+         
+    def __eq__(self,other):
+        if isinstance(other,Triangle):
+            return np.array_equal(self.v,other.v)
+        return False 
+    
+    def __sub__(self,other):
+        if isinstance(other,Triangle):
+            return self.v - other.v
