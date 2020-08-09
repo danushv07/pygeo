@@ -1,6 +1,6 @@
 ffrom .objects import Ray, Sphere, Point, Vector, Triangle
 import numpy as np
-
+import math
 
 
 def _intersect_ray_with_sphere(a,b):
