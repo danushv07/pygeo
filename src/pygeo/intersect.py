@@ -1,4 +1,4 @@
-ffrom .objects import Ray, Sphere, Point, Vector, Triangle
+from .objects import Ray, Sphere, Point, Vector, Triangle
 import numpy as np
 import math
 
