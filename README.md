@@ -20,7 +20,7 @@ Testing
 
 Run
 ```
-pytest tests
+pytest tests/
 ```
 to run all the tests for `pygeo`.
 
